@@ -1,0 +1,68 @@
+--Select *
+--FROM [dbo].[1. January 2021]
+--ORDER BY ride_length ASC;
+
+--DELETE FROM [dbo].[1. January 2021]
+--WHERE ride_length IS NULL;
+
+--SELECT MIN(ride_length) AS minimum_ride_length
+--FROM [dbo].[1. January 2021];
+
+--SELECT MAX(ride_length) AS maximum_ride_length
+--FROM [dbo].[1. January 2021];
+
+SELECT *
+FROM [dbo].[1. January 2021]
+ORDER BY customer_amount ASC;
+
+SELECT DISTINCT rideable_type
+FROM [dbo].[1. January 2021];
+ 
+SELECT * 
+FROM [dbo].[1. January 2021] 
+WHERE member_casual = 'casual';
+
+--SELECT AVG(customer_amount) AS total_customers
+--FROM [dbo].[1. January 2021]
+--WHERE member_casual = 'casual' --Total customers 49089 
+
+--SELECT COUNT(*)
+--FROM [dbo].[1. January 2021]
+--WHERE member_casual = 'member' --Total customers 78705
+
+
+SELECT *
+FROM [dbo].[1. January 2021] as jan, [dbo].[2. Febuary 2021] as feb
+
+
+alter table [dbo].[2. Febuary 2021]
+DROP COLUMN customer_amount;
+
+SELECT *
+FROM [dbo].[2. Febuary 2021]
+
+SELECT case when [dbo].[1. January 2021].ride_id is null then [dbo].[2. Febuary 2021].ride_id else [dbo].[1. January 2021].ride_id end as ride_id
+	,coalesce([dbo].[1. January 2021].rideable_type, [dbo].[2. Febuary 2021].rideable_type) as rideable_type
+	,coalesce(.[1. January 2021].member_casual, [dbo].[2. Febuary 2021].member_casual) as memeber_casual
+	,coalesce([dbo].[1. January 2021].ride_length, [dbo].[2. Febuary 2021].ride_length) as ride_length
+	,coalesce(.[1. January 2021].day_of_week, [dbo].[2. Febuary 2021].day_of_week) as day_of_week 
+FROM [dbo].[1. January 2021]
+FULL JOIN [dbo].[2. Febuary 2021]
+ON [dbo].[1. January 2021].ride_id = [dbo].[2. Febuary 2021].ride_id
+
+
+SELECT case when [dbo].[1. January 2021].ride_id is null then [dbo].[2. Febuary 2021].ride_id
+WHEN [dbo].[1. January 2021].ride_id is null then [dbo].[3. March 2021].ride_id
+WHEN [dbo].[2. Febuary 2021].ride_id is null then [dbo].[3. March 2021].ride_id
+WHEN [dbo].[3. March 2021].ride_id is null then [dbo].[2. Febuary 2021].ride_id
+else [dbo].[1. January 2021].ride_id end as ride_id	
+	,coalesce([dbo].[1. January 2021].rideable_type, [dbo].[2. Febuary 2021].rideable_type, [dbo].[3. March 2021].rideable_type) AS rideable_type
+	,coalesce(.[1. January 2021].member_casual, [dbo].[2. Febuary 2021].member_casual, [dbo].[3. March 2021].member_casual) AS member_casual
+	,coalesce([dbo].[1. January 2021].ride_length, [dbo].[2. Febuary 2021].ride_length, [dbo].[3. March 2021].ride_length) as ride_length
+	,coalesce(.[1. January 2021].day_of_week, [dbo].[2. Febuary 2021].day_of_week, [dbo].[3. March 2021].day_of_week) as day_of_week 
+FROM [dbo].[1. January 2021]
+FULL JOIN [dbo].[2. Febuary 2021]
+ON [dbo].[1. January 2021].ride_id = [dbo].[2. Febuary 2021].ride_id
+FULL JOIN [dbo].[3. March 2021]
+ON [dbo].[2. Febuary 2021].ride_id  = [dbo].[3. March 2021].ride_id
+
